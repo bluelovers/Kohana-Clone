@@ -71,6 +71,28 @@ class form_Core {
 	}
 
 	/**
+	 * Generates a fieldset opening tag.
+	 *
+	 * @param   array   html attributes
+	 * @param   string  a string to be attached to the end of the attributes
+	 * @return  string
+	 */
+	public static function open_fieldset($data = NULL, $extra = '')
+	{
+		return '<fieldset'.html::attributes((array) $data).' '.$extra.'>'."\n";
+	}
+
+	/**
+	 * Generates a fieldset closing tag.
+	 *
+	 * @return  string
+	 */
+	public static function close_fieldset()
+	{
+		return '</fieldset>'."\n";
+	}
+
+	/**
 	 * Creates a HTML form hidden input tag.
 	 *
 	 * @param   string|array  input name or an array of HTML attributes
@@ -377,6 +399,17 @@ class form_Core {
 	}
 
 	/**
+	 * Closes an open form tag.
+	 *
+	 * @param   string  string to be attached after the closing tag
+	 * @return  string
+	 */
+	public static function close($extra = '')
+	{
+		return '</form>'."\n".$extra;
+	}
+	
+	/**
 	 * Creates an HTML form label tag.
 	 *
 	 * @param   string|array  label "for" name or an array of HTML attributes
@@ -445,7 +478,9 @@ class form_Core {
 			'selected',
 			'checked',
 			'readonly',
-			'disabled'
+			'disabled',
+		
+			'autocomplete',
 		);
 
 		$sorted = array();

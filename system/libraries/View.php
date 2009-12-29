@@ -197,20 +197,17 @@ class View_Core {
 	 * @return mixed   variable value if the key is found
 	 * @return void    if the key is not found
 	 */
-	public function &__get($key)
-	{
-		if (isset($this->kohana_local_data[$key]))
-		{
+	function &__get($key) {
+		if (isset($this->kohana_local_data[$key])) {
 			return $this->kohana_local_data[$key];
-		}
-		elseif (isset($this->$key))
-		{
+		} elseif (isset(View::$kohana_global_data[$key])) {
+			return View::$kohana_global_data[$key];
+		} elseif (isset($this->$key)) {
 			return $this->$key;
-		}
-		else
-		{
-			throw new Kohana_Exception('Undefined view variable: :var',
-				array(':var' => $key));
+		} elseif ($key == 'globals') {
+			return View::$kohana_global_data;
+		} else {
+			throw new Kohana_Exception('Undefined view variable: :var', array(':var' => $key));
 		}
 	}
 
@@ -249,7 +246,8 @@ class View_Core {
 		if (is_string($this->kohana_filetype))
 		{
 			// Merge global and local data, local overrides global with the same name
-			$data = $this->kohana_local_data;
+//			$data = $this->kohana_local_data;
+			$data = array_merge(View::$kohana_global_data, $this->kohana_local_data);
 
 			if ($modifier !== FALSE AND is_callable($modifier, TRUE))
 			{

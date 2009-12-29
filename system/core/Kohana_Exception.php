@@ -2,7 +2,7 @@
 /**
  * Kohana Exceptions
  *
- * $Id: Kohana_Exception.php 36 2009-12-24 02:16:55Z bluelovers $
+ * $Id: Kohana_Exception.php 4726 2009-12-23 18:58:53Z isaiah $
  *
  * @package    Core
  * @author     Kohana Team

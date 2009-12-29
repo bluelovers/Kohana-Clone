@@ -28,7 +28,7 @@
 	<?php echo $content ?>
 
 	<p class="copyright">
-		<?php echo __('Rendered in {execution_time} seconds, using {memory_usage} of memory')?><br />
+		<?php echo __('Rendered in {execution_time} seconds, {included_files} ios, using {memory_usage} of memory, {output_compression} enabled.')?><br />
 		Copyright ©2007–2008 Kohana Team
 	</p>
 

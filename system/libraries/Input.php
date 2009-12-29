@@ -2,7 +2,7 @@
 /**
  * Input library.
  *
- * $Id: Input.php 36 2009-12-24 02:16:55Z bluelovers $
+ * $Id: Input.php 4727 2009-12-23 19:03:05Z isaiah $
  *
  * @package    Core
  * @author     Kohana Team
@@ -78,6 +78,37 @@ class Input_Core {
 				$this->magic_quotes_gpc = TRUE;
 				Kohana_Log::add('debug', 'Disable magic_quotes_gpc! It is evil and deprecated: http://php.net/magic_quotes');
 			}
+			
+		// register_globals is enabled
+			if (ini_get('register_globals'))
+			{
+				if (isset($_REQUEST['GLOBALS']))
+				{
+					// Prevent GLOBALS override attacks
+					exit('Global variable overload attack.');
+				}
+
+				// Destroy the REQUEST global
+				$_REQUEST = array();
+
+				// These globals are standard and should not be removed
+				$preserve = array('GLOBALS', '_REQUEST', '_GET', '_POST', '_FILES', '_COOKIE', '_SERVER', '_ENV', '_SESSION');
+
+				// This loop has the same effect as disabling register_globals
+				foreach (array_diff(array_keys($GLOBALS), $preserve) as $key)
+				{
+					global $$key;
+					$$key = NULL;
+
+					// Unset the global variable
+					unset($GLOBALS[$key], $$key);
+				}
+
+				// Warn the developer about register globals
+				Kohana::log('debug', 'Disable register_globals! It is evil and deprecated: http://php.net/register_globals');
+			}
+			
+			$_REQUEST = array();
 
 			if (is_array($_GET))
 			{
@@ -121,6 +152,8 @@ class Input_Core {
 			{
 				$_COOKIE = array();
 			}
+			
+			$_REQUEST = array_merge($_GET, $_POST);
 
 			// Create a singleton
 			Input::$instance = $this;
@@ -165,6 +198,11 @@ class Input_Core {
 		}
 		return $HTTP_RAW_POST_DATA;
 	}
+	
+	function request($key = array(), $default = NULL, $xss_clean = FALSE) {
+		return $this->search_array($_REQUEST, $key, $default, $xss_clean);
+	}
+	
 	// bluelovers
 
 	/**

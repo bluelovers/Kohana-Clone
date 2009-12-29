@@ -2,7 +2,7 @@
 /**
  * Provides Kohana-specific helper functions. This is where the magic happens!
  *
- * $Id: Kohana.php 41 2009-12-24 14:10:43Z bluelovers $
+ * $Id: Kohana.php 4726 2009-12-23 18:58:53Z isaiah $
  *
  * @package    Core
  * @author     Kohana Team
@@ -593,6 +593,7 @@ abstract class Kohana_Core {
 					'{execution_time}',
 					'{memory_usage}',
 					'{included_files}',
+					'{output_compression}',
 				),
 				array
 				(
@@ -601,6 +602,7 @@ abstract class Kohana_Core {
 					$benchmark['time'],
 					number_format($memory, 2).'MB',
 					count(get_included_files()),
+					request::preferred_encoding(array('gzip','deflate'), TRUE),
 				),
 				$output
 			);
@@ -656,8 +658,12 @@ abstract class Kohana_Core {
 	public static function auto_load($class)
 	{
 //		echo self::debug($class);
+
+//		substr($class, 0, 4) == 'View' && exit(Kohana::debug($GLOBALS['scAutoloadClasses'], $class, Event::$level));
 		
 		Event::run('core.autoload', $class);
+		
+		
 		
 		if (class_exists($class, FALSE) OR interface_exists($class, FALSE))
 			return TRUE;
